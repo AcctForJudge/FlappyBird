@@ -1,0 +1,124 @@
+[gd_scene load_steps=14 format=3 uid="uid://bkbombp78tj6c"]
+
+[ext_resource type="Script" uid="uid://t1iuyx1vmd7a" path="res://Scripts/game.gd" id="1_1l0tm"]
+[ext_resource type="PackedScene" uid="uid://b7eodj2kv3xhg" path="res://Scenes/world.tscn" id="1_ebmjs"]
+[ext_resource type="Script" uid="uid://bdhhcottclfbu" path="res://Scripts/score.gd" id="2_wrm1d"]
+[ext_resource type="Texture2D" uid="uid://b35uuawsr14xh" path="res://Assets/sprites/0.png" id="3_3dryh"]
+[ext_resource type="Texture2D" uid="uid://cs84hb07gsypc" path="res://Assets/sprites/message.png" id="4_wowpa"]
+[ext_resource type="Script" uid="uid://dgtf7uh6rmkss" path="res://Scripts/pause.gd" id="5_v158k"]
+[ext_resource type="Texture2D" uid="uid://i8orm4bxlt4b" path="res://Assets/sprites/gameover.png" id="5_wowpa"]
+[ext_resource type="Script" uid="uid://bigs5nd0a3jw6" path="res://Scripts/flicker.gd" id="6_v158k"]
+[ext_resource type="Script" uid="uid://cql8q7r1s2cct" path="res://Scripts/audio.gd" id="9_ldgsr"]
+[ext_resource type="AudioStream" uid="uid://dnbxuddotut0t" path="res://Assets/audio/point.wav" id="10_o5yvi"]
+[ext_resource type="AudioStream" uid="uid://31dgfxf612xn" path="res://Assets/audio/hit.wav" id="11_rfjv2"]
+[ext_resource type="AudioStream" uid="uid://c8pl4b7nvo7yp" path="res://Assets/audio/die.wav" id="12_1phco"]
+[ext_resource type="AudioStream" uid="uid://d3s4pi68nroq0" path="res://Assets/audio/wing.wav" id="13_nb51f"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_1l0tm")
+
+[node name="World" parent="." instance=ExtResource("1_ebmjs")]
+
+[node name="UI" type="Node2D" parent="."]
+
+[node name="Score" type="Node2D" parent="UI"]
+position = Vector2(596, -532)
+script = ExtResource("2_wrm1d")
+
+[node name="Sprite2D" type="Sprite2D" parent="UI/Score"]
+texture = ExtResource("3_3dryh")
+
+[node name="Sprite2D2" type="Sprite2D" parent="UI/Score"]
+position = Vector2(-23, 0)
+
+[node name="Sprite2D3" type="Sprite2D" parent="UI/Score"]
+position = Vector2(-46, 0)
+
+[node name="Sprite2D4" type="Sprite2D" parent="UI/Score"]
+position = Vector2(-72, 0)
+
+[node name="Pause" type="Node2D" parent="UI"]
+script = ExtResource("5_v158k")
+
+[node name="Button" type="Button" parent="UI/Pause"]
+z_index = 500
+texture_filter = 3
+offset_left = 355.0
+offset_top = -600.0
+offset_right = 381.0
+offset_bottom = -569.0
+text = "||"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/Pause"]
+visible = false
+texture_filter = 2
+clip_contents = false
+offset_left = 577.0
+offset_top = -443.0
+offset_right = 617.0
+offset_bottom = -403.0
+theme_override_constants/outline_size = 6
+text = "PAUSED"
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Start" type="Node2D" parent="UI"]
+
+[node name="Message" type="Sprite2D" parent="UI/Start"]
+position = Vector2(589, -364)
+texture = ExtResource("4_wowpa")
+
+[node name="Game Over" type="Node2D" parent="UI"]
+visible = false
+
+[node name="Gameover" type="Sprite2D" parent="UI/Game Over"]
+position = Vector2(593, -375)
+texture = ExtResource("5_wowpa")
+
+[node name="CenterContainer" type="CenterContainer" parent="UI"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 346.0
+offset_top = -171.0
+offset_right = 826.0
+offset_bottom = -131.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="UI/CenterContainer"]
+texture_filter = 1
+layout_mode = 2
+text = "Press Any Button To Start"
+uppercase = true
+script = ExtResource("6_v158k")
+
+[node name="Audio" type="Node2D" parent="."]
+script = ExtResource("9_ldgsr")
+
+[node name="Point" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("10_o5yvi")
+
+[node name="Hit" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("11_rfjv2")
+
+[node name="Die" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("12_1phco")
+
+[node name="Wing" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("13_nb51f")
+
+[node name="Swoosh" type="AudioStreamPlayer" parent="Audio"]
+
+[connection signal="game_over" from="World" to="." method="_on_world_game_over"]
+[connection signal="game_over" from="World" to="UI/Score" method="_on_world_game_over"]
+[connection signal="game_over" from="World" to="Audio" method="_on_world_game_over"]
+[connection signal="increase_point" from="World" to="UI/Score" method="_on_world_increase_point"]
+[connection signal="increase_point" from="World" to="Audio" method="_on_world_increase_point"]
+[connection signal="jump" from="World" to="Audio" method="_on_world_jump"]
+[connection signal="pause" from="UI/Pause" to="." method="_on_pause_pause"]
+[connection signal="pressed" from="UI/Pause/Button" to="UI/Pause" method="_on_button_pressed"]

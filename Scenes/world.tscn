@@ -1,0 +1,91 @@
+[gd_scene load_steps=14 format=4 uid="uid://b7eodj2kv3xhg"]
+
+[ext_resource type="Script" uid="uid://j6utc42ntmhv" path="res://Scripts/generate.gd" id="1_a02cp"]
+[ext_resource type="Texture2D" uid="uid://cnr5m8bxsdwqb" path="res://Assets/sprites/background-day.png" id="2_5a7ea"]
+[ext_resource type="Texture2D" uid="uid://chsov8hswdvw2" path="res://Assets/sprites/base.png" id="4_fo5ed"]
+[ext_resource type="Script" uid="uid://dnjd7j7o35a11" path="res://Scripts/infinite_scroll.gd" id="5_5ukr8"]
+[ext_resource type="PackedScene" uid="uid://4t53qivk83b7" path="res://Scenes/bird.tscn" id="6_5ukr8"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5ukr8"]
+texture = ExtResource("2_5a7ea")
+texture_region_size = Vector2i(288, 512)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_5ukr8"]
+tile_size = Vector2i(288, 512)
+sources/0 = SubResource("TileSetAtlasSource_5ukr8")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_o06y3"]
+texture = ExtResource("4_fo5ed")
+texture_region_size = Vector2i(336, 112)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_k7acu"]
+tile_size = Vector2i(336, 112)
+sources/0 = SubResource("TileSetAtlasSource_o06y3")
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_5ukr8"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_k7acu"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_o06y3"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5ukr8"]
+size = Vector2(20, 2000)
+orientation = 2
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_a02cp")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(586, -63)
+offset = Vector2(0, -256)
+zoom = Vector2(1, 1.1)
+
+[node name="Pipe Timer" type="Timer" parent="."]
+wait_time = 2.0
+ignore_time_scale = true
+
+[node name="Background" type="TileMapLayer" parent="."]
+position = Vector2(0, -112)
+tile_map_data = PackedByteArray("AAABAP//AAAAAAAAAAACAP//AAAAAAAAAAADAP//AAAAAAAAAAAAAP//AAAAAAAAAAD/////AAAAAAAAAAA=")
+tile_set = SubResource("TileSet_5ukr8")
+script = ExtResource("5_5ukr8")
+
+[node name="Base" type="TileMapLayer" parent="."]
+z_index = 15
+tile_map_data = PackedByteArray("AAAAAP//AAAAAAAAAAABAP//AAAAAAAAAAACAP//AAAAAAAAAAD/////AAAAAAAAAAD+////AAAAAAAAAAD9////AAAAAAAAAAADAP//AAAAAAAAAAA=")
+tile_set = SubResource("TileSet_k7acu")
+script = ExtResource("5_5ukr8")
+
+[node name="Bird" parent="." instance=ExtResource("6_5ukr8")]
+position = Vector2(589, -316)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(0, -109)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("WorldBoundaryShape2D_5ukr8")
+one_way_collision = true
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(1, -515)
+rotation = -3.14159
+shape = SubResource("WorldBoundaryShape2D_k7acu")
+one_way_collision = true
+
+[node name="Area2D" type="Area2D" parent="StaticBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D/Area2D"]
+shape = SubResource("WorldBoundaryShape2D_o06y3")
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(1016, 0)
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+z_index = 999
+position = Vector2(1016, 19)
+mesh = SubResource("PlaneMesh_5ukr8")
+
+[connection signal="timeout" from="Pipe Timer" to="." method="_on_pipe_timer_timeout"]
+[connection signal="body_entered" from="StaticBody2D/Area2D" to="." method="_on_area_2d_body_entered"]

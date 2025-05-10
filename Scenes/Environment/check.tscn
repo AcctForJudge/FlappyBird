@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://cvmw50c65c4uf"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_ac584"]
+
+[node name="Point_check" type="Area2D"]
+collision_layer = 64
+collision_mask = 64
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("SegmentShape2D_ac584")
+debug_color = Color(0.959961, 0, 0.518711, 0.42)

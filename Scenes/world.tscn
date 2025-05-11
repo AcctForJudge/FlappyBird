@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://b7eodj2kv3xhg"]
+[gd_scene load_steps=13 format=4 uid="uid://b7eodj2kv3xhg"]
 
 [ext_resource type="Script" uid="uid://j6utc42ntmhv" path="res://Scripts/generate.gd" id="1_a02cp"]
 [ext_resource type="Texture2D" uid="uid://cnr5m8bxsdwqb" path="res://Assets/sprites/background-day.png" id="2_5a7ea"]
@@ -29,10 +29,6 @@ sources/0 = SubResource("TileSetAtlasSource_o06y3")
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_k7acu"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_o06y3"]
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_5ukr8"]
-size = Vector2(20, 2000)
-orientation = 2
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_a02cp")
@@ -81,11 +77,6 @@ shape = SubResource("WorldBoundaryShape2D_o06y3")
 
 [node name="Marker2D" type="Marker2D" parent="."]
 position = Vector2(1016, 0)
-
-[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
-z_index = 999
-position = Vector2(1016, 19)
-mesh = SubResource("PlaneMesh_5ukr8")
 
 [connection signal="timeout" from="Pipe Timer" to="." method="_on_pipe_timer_timeout"]
 [connection signal="body_entered" from="StaticBody2D/Area2D" to="." method="_on_area_2d_body_entered"]
